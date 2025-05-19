@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Tickets</title>
+</head>
+<body>
+  <h1>Tickets de Compra</h1>
+
+  {{#if tickets.length}}
+    <ul>
+      {{#each tickets}}
+        <li>
+          Código: {{this.code}} <br />
+          Comprador: {{this.purchaser}} <br />
+          Monto total: ${{this.amount}} <br />
+          Fecha: {{this.purchase_datetime}} <br />
+        </li>
+      {{/each}}
+    </ul>
+  {{else}}
+    <p>No hay tickets para mostrar.</p>
+  {{/if}}
+
+</body>
+</html>
