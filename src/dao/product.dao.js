@@ -1,21 +1,20 @@
-import { Product } from '../models/product.model.js';
+import { ProductModel } from '../models/product.model.js';
 
 class ProductDAO {
   async create(productData) {
-    const product = new ProductModel(productData);
-    return await product.save();
-  }
-
-  async getById(id) {
-    return await ProductModel.findById(id);
+    return await ProductModel.create(productData);
   }
 
   async getAll() {
     return await ProductModel.find();
   }
 
-  async update(id, updateData) {
-    return await ProductModel.findByIdAndUpdate(id, updateData, { new: true });
+  async getById(id) {
+    return await ProductModel.findById(id);
+  }
+
+  async update(id, data) {
+    return await ProductModel.findByIdAndUpdate(id, data, { new: true });
   }
 
   async delete(id) {

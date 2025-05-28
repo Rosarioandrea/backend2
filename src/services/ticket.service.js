@@ -1,13 +1,12 @@
 import TicketDAO from '../dao/ticket.dao.js';
-import { generateCode } from '../utils/generateCode.js';
+import { v4 as uuidv4 } from 'uuid';
 
 class TicketService {
-  async createTicket(purchaser, amount) {
+  async createTicket(amount, purchaser) {
     const ticket = {
-      code: generateCode(),
-      purchase_datetime: new Date(),
+      code: uuidv4(),
       amount,
-      purchaser,
+      purchaser
     };
     return await TicketDAO.create(ticket);
   }

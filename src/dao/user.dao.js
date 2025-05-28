@@ -1,29 +1,29 @@
-import { User } from '../models/user.model.js';
+import UserModel from '../models/user.model.js';
 
 class UserDAO {
   async create(userData) {
-    const user = new UserModel(userData);
+    const user = new User(userData); 
     return await user.save();
   }
 
   async getById(id) {
-    return await UserModel.findById(id);
+    return await User.findById(id);
   }
 
   async getByEmail(email) {
-    return await UserModel.findOne({ email });
+    return await User.findOne({ email });
   }
 
   async update(id, updateData) {
-    return await UserModel.findByIdAndUpdate(id, updateData, { new: true });
+    return await User.findByIdAndUpdate(id, updateData, { new: true });
   }
 
   async delete(id) {
-    return await UserModel.findByIdAndDelete(id);
+    return await User.findByIdAndDelete(id);
   }
 
   async getAll() {
-    return await UserModel.find();
+    return await User.find();
   }
 }
 
