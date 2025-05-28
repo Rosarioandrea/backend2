@@ -11,11 +11,25 @@ export const getUsers = async (req, res) => {
 
 export const getUserById = async (req, res) => {
   try {
-    const user = await UserManager.getUserById(req.params.id);
-    if (!user) return res.status(404).json({ error: 'Usuario no encontrado' });
-    res.json(user);
-  } catch (error) {
-    res.status(500).json({ error: 'Error al obtener usuario' });
+const user = await UserManager._getRawUserByEmail(email);
+    if (!user) return res.status(401).json({ error: 'Usuario no encontrado' });
+
+    const validPassword = await bcrypt.compare(password, user.password);
+    if (!validPassword) return res.status(401).json({ error: 'Credenciales inválidas' });
+
+    const token = jwt.sign(
+      { email: user.email, role: user.role },
+      process.env.JWT_SECRET,
+      { expiresIn: '1h' }
+    );
+
+    return res
+      .cookie('token', token, { httpOnly: true })
+      .json({ message: 'Login exitoso' });
+
+  } catch (err) {
+    console.error("LOGIN ERROR:", err);
+    return res.status(500).json({ error: err.message });
   }
 };
 
