@@ -14,9 +14,16 @@ import productRoutes from './src/routes/product.routes.js';
 import userRoutes from './src/routes/user.routes.js';
 import sessionRoutes from './src/routes/session.routes.js';
 import authRoutes from './src/routes/auth.routes.js';
+import loggerRouter from './src/routes/logger.routes.js'; 
+import addLogger from './src/middlewares/logger.middleware.js'; 
+import logger from './src/utils/logger.js';
+
 
 dotenv.config();
 const app = express();
+
+// Middleware de logger
+app.use(addLogger);
 
 app.use(cors({
   origin: 'http://localhost:3000',
@@ -32,10 +39,10 @@ app.use(session({
   saveUninitialized: false,
   store: MongoStore.create({
     mongoUrl: process.env.MONGO_URI,
-    ttl: 14 * 24 * 60 * 60, // duración de la sesión en segundos (14 días)
+    ttl: 14 * 24 * 60 * 60,
   }),
   cookie: {
-    maxAge: 3600000, // 1 hora
+    maxAge: 3600000,
     httpOnly: true,
   },
 }));
@@ -43,17 +50,19 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
+// Rutas
 app.use('/api/carts', cartRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/sessions', sessionRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/', loggerRouter); // <--- ruta de prueba del logger
 
 mongoose.connect(process.env.MONGO_URI)
   .then(() => {
-    console.log('Conectado a MongoDB');
+    logger.info('✅ Conectado a MongoDB');
     app.listen(process.env.PORT, () => {
-      console.log(`Servidor corriendo en puerto ${process.env.PORT}`);
+      logger.info(`🚀 Servidor corriendo en puerto ${process.env.PORT}`);
     });
   })
-  .catch(err => console.error('Error de conexión', err));
+  .catch(err => logger.fatal(`❌ Error de conexión: ${err.message}`));
