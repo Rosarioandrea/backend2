@@ -18,6 +18,9 @@ import loggerRouter from './src/routes/logger.routes.js';
 import addLogger from './src/middlewares/logger.middleware.js'; 
 import logger from './src/utils/logger.js';
 
+import swaggerUi from 'swagger-ui-express';
+import swaggerSpecs from './src/docs/swagger.js';
+
 // Importá el router mocks
 import mocksRouter from './src/routes/mocks.router.js';
 
@@ -71,3 +74,6 @@ mongoose.connect(process.env.MONGO_URI)
     });
   })
   .catch(err => logger.fatal(`❌ Error de conexión: ${err.message}`));
+
+
+  app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpecs));
