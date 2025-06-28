@@ -18,6 +18,8 @@ import loggerRouter from './src/routes/logger.routes.js';
 import addLogger from './src/middlewares/logger.middleware.js'; 
 import logger from './src/utils/logger.js';
 
+// Importá el router mocks
+import mocksRouter from './src/routes/mocks.router.js';
 
 dotenv.config();
 const app = express();
@@ -56,7 +58,10 @@ app.use('/api/products', productRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/sessions', sessionRoutes);
 app.use('/api/auth', authRoutes);
-app.use('/', loggerRouter); // <--- ruta de prueba del logger
+app.use('/', loggerRouter); // ruta de prueba del logger
+
+// Montar el router mocks bajo /api/mocks
+app.use('/api/mocks', mocksRouter);
 
 mongoose.connect(process.env.MONGO_URI)
   .then(() => {
